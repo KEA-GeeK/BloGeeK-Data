@@ -13,7 +13,21 @@ from sklearn.model_selection import train_test_split
 
 import pandas as pd
 import numpy as np
+import argparse
 
+parser = argparse.ArgumentParser(description='Style Change')
+
+parser.add_argument('--data_path',
+                    type=str,
+                    default=True,
+                    help='data_path')
+
+parser.add_argument('--output_path',
+                    type=str,
+                    default=True,
+                    help='output_path')
+
+args = parser.parse_args()
 
 class TextStyleTransferDataset(Dataset):
   def __init__(self, 
@@ -44,7 +58,7 @@ class TextStyleTransferDataset(Dataset):
 
     return model_inputs
 
-df = pd.read_csv("C:/Users/User/Desktop/model/smile_style/dataset/smilestyle_dataset.tsv", sep="\t")
+df = pd.read_csv(args.data_path, sep="\t")
 
 model_name = "gogamza/kobart-base-v2"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -95,7 +109,7 @@ data_collator = DataCollatorForSeq2Seq(
     tokenizer=tokenizer, model=model
 )
 
-model_path = "C:/Users/User/Desktop/model/smile_style/output"
+model_path = args.output_path
 
 training_args = Seq2SeqTrainingArguments(
     output_dir=model_path, #The output directory
@@ -121,4 +135,4 @@ trainer = Seq2SeqTrainer(
 
 trainer.train()
 
-trainer.save_model("C:/Users/User/Desktop/model/smile_style/output")
+trainer.save_model(model_path)
