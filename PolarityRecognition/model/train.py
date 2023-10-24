@@ -21,7 +21,7 @@ import os
 # GPU 사용 시
 device = torch.device("cuda:0")
 
-parser = argparse.ArgumentParser(description='Porarity Recognition Model')
+parser = argparse.ArgumentParser(description='Polarity Recognition Model')
 
 parser.add_argument('--train_data',
                     type=str,
