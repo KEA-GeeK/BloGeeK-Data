@@ -72,8 +72,8 @@ BloGeeK-Data is a repository for the parts of the BloGeek project that use machi
           ```bash
           python change.py --model_path [folder_path] --style [style_name] --sentence [input_sentence]
           ```
-            * model_path : change.py의 model_path는 train.py의 output_path와 동일합니다.
-            * style : style의 종류는 다음과 같습니다.
+            * model_path : The __model_path__ in _change.py_ is the same as the __output_path__ in _train.py_.
+            * style : There are the following types of __style__ :
               
               | style_name | Description |
               |:---:| :---: |
