@@ -2,6 +2,10 @@
 
 BloGeeK-Data is a repository for the parts of the BloGeek project that use machine learning.
 
+| English | Korean |
+| :---: | :---: |
+| Link | [Link](https://github.com/KEA-GeeK/BloGeeK-Data/blob/main/readme_lang/README_ko.md) |
+
 <br> <br>
 
 ## <b> Repository Structure </b>
