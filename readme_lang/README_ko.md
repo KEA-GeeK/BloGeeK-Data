@@ -26,7 +26,7 @@ BloGeeK-Data는 BloGeek 프로젝트에서 머신러닝을 사용하는 부분�
       
 * <b> 문체 변경 </b>
     > 문제 변경 모델은 주어진 문장을 다양한 문체로 변경하며, 이 프로젝트에서는 데이터의 양을 늘리기 위해 사용하였습니다.
-    * File
+    * 파일
         * <b> dataset </b> : 문체 변경 모델을 만들고 테스트하기 위해 사용되는 데이터셋
           *  README.md : 데이터셋을 다운로드하기 위한 링크
         * <b> model </b> : 모델을 학습하고 문체를 변경하기 위한 파이썬 파일들
@@ -34,6 +34,10 @@ BloGeeK-Data는 BloGeek 프로젝트에서 머신러닝을 사용하는 부분�
           * change.py : 문체 변경을 위한 파이썬 파일
         * README.md : 문체 변경 모델을 실행하기 위해 필요한 정보들을 담은 마크다운 파일
     * 구현에 사용한 모델 : [KoBART](https://huggingface.co/gogamza/kobart-base-v2)
+* <b> readme_lang </b>
+    > 언어별 README.md 파일들
+    * 파일
+        * README_ko.md : 한국어 README.md
 * <b> README.md </b>
     > BloGeek-Data에 대한 설명이 담긴 마크다운 파일
   
