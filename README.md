@@ -33,6 +33,10 @@ BloGeeK-Data is a repository for the parts of the BloGeek project that use machi
           * change.py : Python file for change
         * README.md : Markdown file that writes out what we need to run Style Transfer model
     * Implemented Model : [KoBART](https://huggingface.co/gogamza/kobart-base-v2)
+* <b> readme_lang </b>
+    > README.md files by language
+    * File
+        * README_ko.md : Korean README.md
 * <b> README.md </b>
     > A markdown file containing a description of BloGeeK-Data.
   
