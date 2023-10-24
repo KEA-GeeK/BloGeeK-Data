@@ -1,17 +1,18 @@
 from transformers.optimization import get_cosine_schedule_with_warmup
+from torch.utils.data import Dataset, DataLoader
 from kobert_tokenizer import KoBERTTokenizer
+from tqdm import tqdm, tqdm_notebook
 from transformers import BertModel
 from transformers import AdamW
+from torch import nn
 
-from torch.utils.data import Dataset, DataLoader
-from tqdm import tqdm, tqdm_notebook
 import torch.nn.functional as F
 import torch.optim as optim
 import gluonnlp as nlp
-from torch import nn
 import pandas as pd
 import numpy as np
 import torch
+import wandb
 
 # GPU 사용 시
 device = torch.device("cuda:0")
@@ -155,6 +156,18 @@ warmup_step = int(t_total * warmup_ratio)
 
 scheduler = get_cosine_schedule_with_warmup(optimizer, num_warmup_steps=warmup_step, num_training_steps=t_total)
 
+wandb.init(
+    # set the wandb project where this run will be logged
+    project="Polarity Recognition",
+    
+    # track hyperparameters and run metadata
+    config={
+    "learning_rate": learning_rate,
+    "architecture": "KoBERT",
+    "epochs": num_epoch,
+    }
+)
+
 def calc_accuracy(X,Y):
     max_vals, max_indices = torch.max(X, 1)
     train_acc = (max_indices == Y).sum().data.cpu().numpy()/max_indices.size()[0]
@@ -179,7 +192,12 @@ for e in range(num_epochs):
         train_acc += calc_accuracy(out, label)
         if batch_id % log_interval == 0:
             print("epoch {} batch id {} loss {} train acc {}".format(e+1, batch_id+1, loss.data.cpu().numpy(), train_acc / (batch_id+1)))
-    print("epoch {} train acc {}".format(e+1, train_acc / (batch_id+1)))
+            train_step_accuracy = loss.data.cpu().numpy()
+            train_step_loss = train_acc / (batch_id+1)
+    print("epoch {} train acc {} loss {}".format(e+1, train_acc / (batch_id+1), train_step_loss))
+    train_accuracy = train_acc / (batch_id+1)
+    train_loss = train_step_loss
+  
     model.eval()
     for batch_id, (token_ids, valid_length, segment_ids, label) in enumerate(tqdm_notebook(test_dataloader)):
         token_ids = token_ids.long().to(device)
@@ -188,4 +206,9 @@ for e in range(num_epochs):
         label = label.long().to(device)
         out = model(token_ids, valid_length, segment_ids)
         test_acc += calc_accuracy(out, label)
-    print("epoch {} test acc {}".format(e+1, test_acc / (batch_id+1)))
+        loss = loss_fn(out, label)
+    print("epoch {} test acc {} loss {}".format(e+1, test_acc / (batch_id+1), loss))
+    test_accuracy = test_acc / (batch_id+1)
+    test_loss = loss
+
+ wandb.log({"Training Accuracy per Step": train_step_accuracy, "Training Loss per Step": train_step_loss, "Training Accuracy": train_accuracy, "Training Loss": train_loss, "Validation Accuracy": test_accuracy, "Validation Loss": test_loss})
