@@ -11,8 +11,12 @@ import torch.optim as optim
 import gluonnlp as nlp
 import pandas as pd
 import numpy as np
+import datetime
+import argparse
+import pickle
 import torch
-import wandb
+#import wandb
+import os
 
 # GPU 사용 시
 device = torch.device("cuda:0")
@@ -156,6 +160,7 @@ warmup_step = int(t_total * warmup_ratio)
 
 scheduler = get_cosine_schedule_with_warmup(optimizer, num_warmup_steps=warmup_step, num_training_steps=t_total)
 
+'''
 wandb.init(
     # set the wandb project where this run will be logged
     project="Polarity Recognition",
@@ -167,6 +172,7 @@ wandb.init(
     "epochs": num_epoch,
     }
 )
+'''
 
 def calc_accuracy(X,Y):
     max_vals, max_indices = torch.max(X, 1)
@@ -211,4 +217,16 @@ for e in range(num_epochs):
     test_accuracy = test_acc / (batch_id+1)
     test_loss = loss
 
- wandb.log({"Training Accuracy per Step": train_step_accuracy, "Training Loss per Step": train_step_loss, "Training Accuracy": train_accuracy, "Training Loss": train_loss, "Validation Accuracy": test_accuracy, "Validation Loss": test_loss})
+# wandb.log({"Training Accuracy per Step": train_step_accuracy, "Training Loss per Step": train_step_loss, "Training Accuracy": train_accuracy, "Training Loss": train_loss, "Validation Accuracy": test_accuracy, "Validation Loss": test_loss})
+
+folder_path = os.path.join(os.path.dirname(__file__), '.', 'pt')
+
+current_date = datetime.date.today()
+pt_name = "model_" + current_date.strftime("%Y%m%d") + ".pt"
+
+if not os.path.exists(folder_path):
+    os.makedirs(folder_path)
+
+pt_path = os.path.join(folder_path, pt_name)
+
+torch.save(model.state_dict(), pt_path)
