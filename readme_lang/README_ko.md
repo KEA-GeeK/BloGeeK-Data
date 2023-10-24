@@ -2,6 +2,11 @@
 
 BloGeeK-Data는 BloGeek 프로젝트에서 머신러닝을 사용하는 부분을 담은 레포지터리입니다.
 
+| 영어 | 한국어 |
+| :---: | :---: |
+| [Link](https://github.com/KEA-GeeK/BloGeeK-Data/blob/main/README.md) | Link |
+
+
 <br> <br>
 
 ## <b> 레포지터리 구조 </b>
