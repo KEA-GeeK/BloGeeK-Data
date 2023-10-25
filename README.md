@@ -39,7 +39,18 @@ BloGeeK-Data is a repository for the parts of the BloGeek project that use machi
         * README_ko.md : Korean README.md
 * <b> README.md </b>
     > A markdown file containing a description of BloGeeK-Data.
-  
+
+* <b> HateDetection </b>
+    > Hate Detection model detects whether a given sentence contains expressions that include hate or immorality.
+    * File
+        * <b> dataset </b> : Datasets we used to create and test the Hate Detection Model
+          *  README.md : Links to download the dataset
+        * <b> model </b> : Python files to train the model and perform the inference
+          * train.py : Python file for training
+          * infer.py : Python file for inference
+        * README.md : Markdown file that writes out what we need to run Hate Detection model
+    * Implemented Model : [KoELECTRA](https://github.com/monologg/KoELECTRA)
+
 <br> <br>
 
 ## <b> Model Implementation </b>
