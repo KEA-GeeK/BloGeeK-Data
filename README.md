@@ -138,5 +138,5 @@ BloGeeK-Data is a repository for the parts of the BloGeek project that use machi
 
 | Name | Student Number | University | Contributed Parts | Github Link |
 | :---: | :---: | :---: | :---: | :---: |
-| Baek Hyunjung | 201935059 | Gachon Univ. | ? | [Github](https://github.com/Baekhyunjung) |
+| Baek Hyunjung | 201935059 | Gachon Univ. | HateDetection, TopicRecommendation | [Github](https://github.com/Baekhyunjung) |
 | Kim Donghyeon | 201935217 | Gachon Univ. | PolarityRecognition, StyleTransfer | [Github](https://github.com/eastlighting1) |
