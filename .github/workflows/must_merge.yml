@@ -3,7 +3,7 @@ name: Merge to Main
 on:
   push:
     branches:
-      - '*'
+      - action_trashcan
     paths-ignore:
       - '.github/workflows/must_merge.yml' # 이 파일은 workflow 파일의 이름에 따라 조정하세요.
 
