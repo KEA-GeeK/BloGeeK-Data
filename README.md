@@ -1,5 +1,8 @@
 # BloGeeK-Data
 
+![image](https://github.com/KEA-GeeK/BloGeeK-Data/assets/31691750/4d4e507e-71dc-4624-801c-2fb7f55b5049)
+
+
 BloGeeK-Data is a repository for the parts of the BloGeek project that use machine learning.
 
 | English | Korean |
