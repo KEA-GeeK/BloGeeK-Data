@@ -17,14 +17,11 @@ pipeline {
                     if (branchName == 'main') {
                       currentBuild.result = 'FAILURE'
 
-                      // GitHub repository details
-                      def githubOwner = 'KEA-GeeK' // GitHub owner/organization name
-                      def githubRepo = 'BloGeeK-Data' // GitHub repository name
-                      def githubToken = credentials('geek_data_test') // Jenkins credentials for GitHub token
+                      def githubAPIUrl = "https://api.github.com/repos/KEA-GeeK/BloGeeK-Data/issues"
+                      def issueTitle = 'Commits to main branch not allowed'
+                      def issueBody = "Dear @${commitAuthor},\n\nPlease refrain from committing to the main branch.\n\nThank you!"
 
-                      def githubAPIUrl = "https://api.github.com/repos/${githubOwner}/${githubRepo}/issues"
-                      def issueTitle = 'Direct commits to main branch not allowed'
-                      def issueBody = "Dear @${commitAuthor},\n\nPlease refrain from committing directly to the main branch.\n\nThank you!"
+                      def githubCreds = credentials('geek_data_test') // Replace 'your-credentials-id' with your actual credentials ID
 
                       def payload = [
                         title: issueTitle,
@@ -34,7 +31,7 @@ pipeline {
                       def response = httpRequest(
                         httpMode: 'POST',
                         url: githubAPIUrl,
-                        authentication: githubToken,
+                        authentication: githubCreds,
                         contentType: 'APPLICATION_JSON',
                         requestBody: groovy.json.JsonOutput.toJson(payload)
                       )
