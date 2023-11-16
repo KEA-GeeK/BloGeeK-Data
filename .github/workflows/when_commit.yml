@@ -1,0 +1,37 @@
+name: Jenkins Call When Commit
+
+on:
+  push:
+    branches:
+      - '*' # 모든 브랜치의 push 이벤트를 수신합니다
+
+jobs:
+  jenkins-trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: Run Jenkinsfile A
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          echo "A"
+          # curl -X POST -L http://YOUR_JENKINS_SERVER/job/Jen/job/A/buildWithParameters?token=YOUR_TOKEN
+
+      - name: Run Jenkinsfile B
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, 'hochul')
+        run: |
+          echo "B"
+          # curl -X POST -L http://YOUR_JENKINS_SERVER/job/Jen/job/B/buildWithParameters?token=YOUR_TOKEN
+
+      - name: Run Jenkinsfile C
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/feature/')
+        run: |
+          echo "C"
+          # curl -X POST -L http://YOUR_JENKINS_SERVER/job/Jen/job/C/buildWithParameters?token=YOUR_TOKEN
+
+      - name: Run Jenkinsfile D
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/feature/') && contains(github.event.head_commit.message, 'hochul')
+        run: |
+          echo "D"
+          # curl -X POST -L http://YOUR_JENKINS_SERVER/job/Jen/job/D/buildWithParameters?token=YOUR_TOKEN
