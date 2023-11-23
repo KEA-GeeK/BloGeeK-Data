@@ -1,38 +1,39 @@
-name: Jenkins Call When Commit
+name: Jenkins Job Trigger
 
 on:
   push:
     branches:
-      - '*' # 모든 브랜치의 push 이벤트를 수신합니다
+      - '*'
+    paths-ignore:
+      - '.github/workflows/**'
 
 jobs:
-  jenkins-trigger:
+
+  commit_to_main :
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-      
-      - name: Run Jenkinsfile A
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      - name: Work Test
         run: |
           echo "A"
-          # echo "BB"
-          # curl -X POST -L http://YOUR_JENKINS_SERVER/job/Jen/job/A/buildWithParameters?token=YOUR_TOKEN
+      #- name: Trigger Jenkins Job for main branch
+      #  uses: appleboy/jenkins-action@master
+      #  with:
+      #    url: ${{ secrets.JENKINS_URL }} # Your Jenkins URL
+      #    user: ${{ secrets.JENKINS_USER }} # Your Jenkins username
+      #    token: ${{ secrets.JENKINS_TOKEN }} # Your Jenkins token
+      #    job: 'commit_to_main' # Jenkins job name
 
-      - name: Run Jenkinsfile B
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, 'hochul')
+  python_convention:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Work Test
         run: |
           echo "B"
-          # curl -X POST -L http://YOUR_JENKINS_SERVER/job/Jen/job/B/buildWithParameters?token=YOUR_TOKEN
-
-      - name: Run Jenkinsfile C
-        if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/feature/')
-        run: |
-          echo "C"
-          # curl -X POST -L http://YOUR_JENKINS_SERVER/job/Jen/job/C/buildWithParameters?token=YOUR_TOKEN
-
-      - name: Run Jenkinsfile D
-        if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/feature/') && contains(github.event.head_commit.message, 'hochul')
-        run: |
-          echo "D"
-          # curl -X POST -L http://YOUR_JENKINS_SERVER/job/Jen/job/D/buildWithParameters?token=YOUR_TOKEN
+      #- name: Trigger Jenkins Job for Python convention
+      #  uses: appleboy/jenkins-action@master
+      #  with:
+      #    url: ${{ secrets.JENKINS_URL }} # Your Jenkins URL
+      #    user: ${{ secrets.JENKINS_USER }} # Your Jenkins username
+      #    token: ${{ secrets.JENKINS_TOKEN }} # Your Jenkins token
+      #    job: 'python_convention' # Jenkins job name
