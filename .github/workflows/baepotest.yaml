@@ -20,3 +20,18 @@ jobs:
         user: ${{ github.actor }}
         token: ${{ secrets.JENKINS_API_TOKEN }}
         job: "BloGeeK-Data"
+
+    - name: Wait for Jenkins Job to Complete
+      id: wait-for-job
+      run: |
+         while job is not complete:
+           check job status
+           if job is complete:
+             break
+           sleep for a short duration
+
+    - name: Fail if Jenkins Job Failed
+      if: steps.wait-for-job.outputs.job-status != 'SUCCESS'
+      run: |
+        echo "Jenkins job failed"
+        exit 1
