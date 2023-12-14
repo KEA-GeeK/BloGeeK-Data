@@ -21,3 +21,10 @@ jobs:
         user: ${{ github.actor }}
         token: ${{ secrets.JENKINS_API_TOKEN }}
         job: "BloGeeK-Data"
+
+    - name: Check Job Status
+      run: |
+        JENKINS_JOB_URL="${{ steps.trigger-job.outputs.job_url }}"
+        # Poll the Jenkins job status
+        # (You need to write a script here to poll the status of the Jenkins job)
+        # If the job fails, exit with a non-zero status to fail the workflow
