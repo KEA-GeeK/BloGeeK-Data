@@ -2,9 +2,8 @@ name: 배포해줘잉
 
 # This workflow is triggered on merges to the main branch
 on:
-  push:
-    branches:
-      - main
+  pull_request:
+      branches: [ main ]
 
 jobs:
   trigger-jenkins-job:
