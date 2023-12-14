@@ -1,0 +1,23 @@
+name: 배포해줘잉
+
+# This workflow is triggered on merges to the main branch
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  trigger-jenkins-job:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Trigger Jenkins Job
+      uses: appleboy/jenkins-action@master
+      with:
+        url: ${{ secrets.WEBHOOK_URL }}
+        user: ${{ github.actor }}
+        token: ${{ secrets.JENKINS_API_TOKEN }}
+        job: "BloGeeK-Data"
