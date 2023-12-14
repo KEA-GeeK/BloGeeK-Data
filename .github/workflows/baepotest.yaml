@@ -2,9 +2,8 @@ name: 배포해줘잉
 
 # This workflow is triggered on merges to the main branch
 on:
-  push:
-    branches:
-      - main
+  pull_request:
+      branches: [ main ]
 
 jobs:
   trigger-jenkins-job:
@@ -22,9 +21,17 @@ jobs:
         token: ${{ secrets.JENKINS_API_TOKEN }}
         job: "BloGeeK-Data"
 
-    - name: Check Job Status
+    - name: Wait for Jenkins Job to Complete
+      id: wait-for-job
       run: |
-        JENKINS_JOB_URL="${{ steps.trigger-job.outputs.job_url }}"
-        # Poll the Jenkins job status
-        # (You need to write a script here to poll the status of the Jenkins job)
-        # If the job fails, exit with a non-zero status to fail the workflow
+         while job is not complete:
+           check job status
+           if job is complete:
+             break
+           sleep for a short duration
+
+    - name: Fail if Jenkins Job Failed
+      if: steps.wait-for-job.outputs.job-status != 'SUCCESS'
+      run: |
+        echo "Jenkins job failed"
+        exit 1
