@@ -23,15 +23,27 @@ jobs:
 
     - name: Wait for Jenkins Job to Complete
       id: wait-for-job
+      env:
+        JENKINS_JOB_URL: ${{ secrets.JENKINS_JOB_STATUS_URL }} # Set your Jenkins job status URL in secrets
+        JENKINS_USER: ${{ github.actor }}
+        JENKINS_TOKEN: ${{ secrets.JENKINS_API_TOKEN }}
+        
       run: |
-         while job is not complete:
-           check job status
-           if job is complete:
-             break
-           sleep for a short duration
+        STATUS=""
+        JOB_URL="$JENKINS_JOB_URL"
+        
+        while [ "$STATUS" != "SUCCESS" ]; do
+          RESPONSE=$(curl -s -u $JENKINS_USER:$JENKINS_TOKEN "$JOB_URL")
+          STATUS=$(echo $RESPONSE | jq -r '.result') # Parsing JSON response to get the job result
 
-    - name: Fail if Jenkins Job Failed
-      if: steps.wait-for-job.outputs.job-status != 'SUCCESS'
-      run: |
-        echo "Jenkins job failed"
-        exit 1
+          if [ "$STATUS" == "FAILURE" ]; then
+            echo "Jenkins job failed"
+            exit 1
+          elif [ "$STATUS" == "SUCCESS" ]; then
+            echo "Jenkins job succeeded"
+            break
+          else
+            echo "Waiting for job to complete..."
+            sleep 30 # Wait for 30 seconds before the next poll
+          fi
+        done
