@@ -1,49 +1,75 @@
-name: 배포해줘잉
+name: CD Pipeline
 
-# This workflow is triggered on merges to the main branch
 on:
-  pull_request:
-      branches: [ main ]
+  push:
+    branches:
+      - main
 
 jobs:
-  trigger-jenkins-job:
+  deployment:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout Code
+        uses: actions/checkout@v2
 
-    - name: Trigger Jenkins Job
-      uses: appleboy/jenkins-action@master
-      with:
-        url: ${{ secrets.WEBHOOK_URL }}
-        user: ${{ github.actor }}
-        token: ${{ secrets.JENKINS_API_TOKEN }}
-        job: "BloGeeK-Data"
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
 
-    - name: Wait for Jenkins Job to Complete
-      id: wait-for-job
-      env:
-        JENKINS_JOB_URL: ${{ secrets.JENKINS_JOB_STATUS_URL }} # Set your Jenkins job status URL in secrets
-        JENKINS_USER: ${{ github.actor }}
-        JENKINS_TOKEN: ${{ secrets.JENKINS_API_TOKEN }}
-        
-      run: |
-        STATUS=""
-        JOB_URL="$JENKINS_JOB_URL"
-        
-        while [ "$STATUS" != "SUCCESS" ]; do
-          RESPONSE=$(curl -s -u $JENKINS_USER:$JENKINS_TOKEN "$JOB_URL")
-          STATUS=$(echo $RESPONSE | jq -r '.result') # Parsing JSON response to get the job result
-
-          if [ "$STATUS" == "FAILURE" ]; then
-            echo "Jenkins job failed"
+      - name: Check branch
+        run: |
+          if [ "${{ github.ref }}" != "refs/heads/main" ]; then
+            echo "Wrong Call"
             exit 1
-          elif [ "$STATUS" == "SUCCESS" ]; then
-            echo "Jenkins job succeeded"
-            break
-          else
-            echo "Waiting for job to complete..."
-            sleep 30 # Wait for 30 seconds before the next poll
           fi
-        done
+
+      - name: Check commit message format
+        run: |
+          COMMIT_MSG=$(git log -1 --pretty=format:%s)
+          MODEL=$(echo $COMMIT_MSG | cut -d '-' -f 1)
+          DETAILS=$(echo $COMMIT_MSG | cut -d '-' -f 2-)
+          if [ -z "$MODEL" ] || [ -z "$DETAILS" ]; then
+            echo "Commit message does not follow the required format '(Model)-(Commit details)'."
+            exit 1
+          fi
+          echo "MODEL=$MODEL" >> $GITHUB_ENV
+          echo "DETAILS=$DETAILS" >> $GITHUB_ENV
+
+      - name: Check model directory
+        run: |
+          if [ ! -d "$MODEL" ]; then
+            echo "$MODEL does not exist."
+            exit 1
+          fi
+
+      - name: Check Dockerfile
+        run: |
+          if [ ! -f "$MODEL/Dockerfile" ]; then
+            echo "Dockerfile is missing."
+            exit 1
+          fi
+
+      - name: Check requirements.txt
+        run: |
+          if [ ! -f "$MODEL/model/requirements.txt" ]; then
+            echo "requirements.txt is missing."
+            exit 1
+          fi
+
+      - name: Build and run Docker images
+        run: |
+          cd $MODEL
+          docker build -f infer.Dockerfile -t $MODEL-infer .
+          docker build -f train.Dockerfile -t $MODEL-train .
+          docker run $MODEL-infer
+          docker run $MODEL-train
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Push images to Amazon ECR
+        run: |
+          IMAGE_TAG=${{ github.actor }}
+          docker tag $MODEL-infer:latest $ECR_REGISTRY/$MODEL-infer:$IMAGE_TAG
+          docker tag $MODEL-train:latest $ECR_REGISTRY/$MODEL-train:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$MODEL-infer:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$MODEL-train:$IMAGE_TAG
