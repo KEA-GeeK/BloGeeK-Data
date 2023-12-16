@@ -22,6 +22,13 @@ BloGeeK-Data is a repository for the parts of the BloGeek project that use machi
         * (폴더 안의 파일들을 나열하고 설명)
     * (모델 설명)
     * Implemented Model : [KoBART]()
+* <b> HateDetection </b>
+    > HateDetection model is a model that determines whether a given sentence or set of sentences contains hate speech or not.
+    * File
+        * <b> train.py </b> : Python file for training
+        * <b> train.py </b> : Python file for inference
+    * (모델 설명)
+    * Implemented Model : [KoElectra]()
 * <b> README </b>
     > A markdown file containing a description of BloGeeK-Data.
   
@@ -63,4 +70,5 @@ BloGeeK-Data is a repository for the parts of the BloGeek project that use machi
 | Name | Student Number | University | Contributed Parts | Github Link |
 | :---: | :---: | :---: | :---: | :---: |
 |Kim Donghyeon | 201935217 | Gachon Univ. | PolarityRecognition | [Github](https://github.com/eastlighting1) |
+|Baek Hyunjung | 201935059 | Gachon Univ. | HateDetection | [Github](https://github.com/Baekhyunjung) |
 
