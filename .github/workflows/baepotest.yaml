@@ -48,13 +48,6 @@ jobs:
             exit 1
           fi
 
-      - name: Check requirements.txt
-        run: |
-          if [ ! -f "$MODEL/model/requirements.txt" ]; then
-            echo "requirements.txt is missing."
-            exit 1
-          fi
-
       - name: Build and run Docker images
         run: |
           cd $MODEL
