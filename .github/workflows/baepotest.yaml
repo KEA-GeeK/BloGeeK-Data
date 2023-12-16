@@ -50,11 +50,12 @@ jobs:
 
       - name: Build and run Docker images
         run: |
+          MODEL_LOWER=$(echo "$MODEL" | tr '[:upper:]' '[:lower:]')
           cd $MODEL
-          docker build -f infer.Dockerfile -t $MODEL-infer .
-          docker build -f train.Dockerfile -t $MODEL-train .
-          docker run $MODEL-infer
-          docker run $MODEL-train
+          docker build -f infer.Dockerfile -t ${MODEL_LOWER}-infer .
+          docker build -f train.Dockerfile -t ${MODEL_LOWER}-train .
+          docker run ${MODEL_LOWER}-infer
+          docker run ${MODEL_LOWER}-train
 
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
