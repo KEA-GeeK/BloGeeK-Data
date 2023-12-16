@@ -41,10 +41,10 @@ jobs:
             exit 1
           fi
 
-      - name: Check Dockerfile
+      - name: Check for Dockerfile with extension
         run: |
-          if [ ! -f "$MODEL/Dockerfile" ]; then
-            echo "Dockerfile is missing."
+          if [ -z "$(find $MODEL -type f -name '*.Dockerfile')" ]; then
+            echo "No .Dockerfile found in the $MODEL directory."
             exit 1
           fi
 
