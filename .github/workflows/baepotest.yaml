@@ -73,7 +73,7 @@ jobs:
           IMAGE_TAG: ${{ github.actor }}       
         run : |
           docker tag $MODEL-train:latest ${{ secrets.WEBHOOK_URL }}/$MODEL-train:$IMAGE_TAG
-	        docker tag $MODEL-infer:latest ${{ secrets.WEBHOOK_URL }}/$MODEL-infer:$IMAGE_TAG
+          docker tag $MODEL-infer:latest ${{ secrets.WEBHOOK_URL }}/$MODEL-infer:$IMAGE_TAG
           docker push $REGISTRY/$MODEL-infer:$IMAGE_TAG
-	        docker push $REGISTRY/$MODEL-train:$IMAGE_TAG
+          docker push $REGISTRY/$MODEL-train:$IMAGE_TAG
 
