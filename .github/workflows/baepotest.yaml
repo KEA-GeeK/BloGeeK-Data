@@ -63,7 +63,8 @@ jobs:
       - name: Push images to Amazon ECR
         run: |
           IMAGE_TAG=${{ github.actor }}
-          docker tag $MODEL-infer:latest $ECR_REGISTRY/$MODEL-infer:$IMAGE_TAG
-          docker tag $MODEL-train:latest $ECR_REGISTRY/$MODEL-train:$IMAGE_TAG
-          docker push $ECR_REGISTRY/$MODEL-infer:$IMAGE_TAG
-          docker push $ECR_REGISTRY/$MODEL-train:$IMAGE_TAG
+          docker tag $MODEL-infer:latest ${{ secrets.WEBHOOK_URL }}/$MODEL-infer:$IMAGE_TAG
+          docker tag $MODEL-train:latest ${{ secrets.WEBHOOK_URL }}/$MODEL-train:$IMAGE_TAG
+          docker push ${{ secrets.WEBHOOK_URL }}/$MODEL-infer:$IMAGE_TAG
+          docker push ${{ secrets.WEBHOOK_URL }}/$MODEL-train:$IMAGE_TAG
+
