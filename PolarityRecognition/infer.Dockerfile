@@ -7,7 +7,7 @@ FROM python:3.8
 WORKDIR /app
 
 # 현재 모델 폴더의 내용을 컨테이너로 복사
-COPY ./BloGeeK-Data/PolarityRecognition /app
+COPY . /app
 
 # requirements.txt 파일이 있다면 종속성 설치
 RUN if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
