@@ -11,6 +11,3 @@ COPY . /app
 
 # requirements.txt 파일이 있다면 종속성 설치
 RUN if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-
-# ★모델 실행을 위한 명령어 설정하기
-CMD ["python", "model/infer.py"]
